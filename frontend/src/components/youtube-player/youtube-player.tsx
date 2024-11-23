@@ -1,11 +1,19 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Plyr, { APITypes, PlyrOptions, PlyrSource } from "plyr-react";
 import "plyr-react/plyr.css";
 import Video from "../../assets/trump.mp4";
 import captions from "../../assets/captions.vtt";
+import "./youtube-player.css";
+import { VideoPlayerProps } from "../../types";
 
-const VideoPlayer: React.FC = () => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ markers, jumpTo }) => {
   const plyrRef = useRef<APITypes>(null);
+
+  useEffect(() => {
+    if (jumpTo !== undefined && plyrRef.current) {
+      plyrRef.current.plyr.currentTime = jumpTo;
+    }
+  }, [jumpTo]);
 
   const videoSource: PlyrSource = {
     type: "video" as const,
@@ -31,16 +39,12 @@ const VideoPlayer: React.FC = () => {
     captions: { active: true, language: "en" },
     markers: {
       enabled: true,
-      points: [
-        {
-          time: 5,
-          label: "Test marker",
-        },
-        {
-          time: 15,
-          label: "One minute",
-        },
-      ],
+      points: markers,
+    },
+    displayDuration: true,
+    tooltips: {
+      controls: true,
+      seek: true,
     },
   };
 

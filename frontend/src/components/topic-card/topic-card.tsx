@@ -21,7 +21,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer"
+      className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors cursor-pointer"
     >
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-lg font-semibold text-white">{topic.title}</h3>

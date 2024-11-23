@@ -23,3 +23,76 @@
 .caption-overlay p {
   margin: 0;
 }
+
+.plyr {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -6px rgba(0, 0, 0, 0.2), 0 0 15px 2px rgba(0, 0, 0, 0.15),
+    0 0 25px 3px rgba(67, 203, 255, 0.15);
+}
+
+/* Optional: style the video element itself */
+.plyr video {
+  border-radius: 1rem;
+}
+
+/* Customize the tooltip */
+.plyr__tooltip {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  pointer-events: none;
+  width: auto;
+  white-space: nowrap; /* Prevent text wrapping */
+  max-width: none !important; /* Override any max-width */
+}
+
+/* Remove any width constraints from Plyr's default styles */
+.plyr [data-plyr="tooltip"] {
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* Ensure the tooltip container doesn't limit width */
+.plyr__progress__tooltip {
+  width: auto !important;
+  max-width: none !important;
+  white-space: nowrap;
+}
+
+/* Add arrow to tooltip */
+.plyr__tooltip::before {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid rgba(0, 0, 0, 0.8);
+  bottom: -4px;
+  content: "";
+  height: 0;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  width: 0;
+  z-index: 2;
+}
+
+/* Custom styles for marker tooltips */
+.plyr__progress__marker:hover .plyr__tooltip {
+  background: var(--color-primary);
+}
+
+/* Optional: Add animation */
+.plyr__tooltip {
+  width: fit-content;
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.plyr__progress__container:hover .plyr__tooltip,
+.plyr__progress__marker:hover .plyr__tooltip {
+  opacity: 1;
+  transform: translate(-50%, -10px) scale(1);
+}

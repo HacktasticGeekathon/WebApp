@@ -19,3 +19,13 @@ export interface TopicCardProps {
   topic: Topic;
   onClick?: () => void;
 }
+
+export type Marker = {
+  label: string;
+  time: number;
+};
+
+export interface VideoPlayerProps {
+  markers: Marker[];
+  jumpTo?: number;
+}
