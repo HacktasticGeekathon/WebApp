@@ -1,0 +1,25 @@
+.video-container {
+  position: relative;
+  width: 640px; /* Match the YouTube player width */
+  height: 390px; /* Match the YouTube player height */
+  margin: auto;
+}
+
+.caption-overlay {
+  position: absolute;
+  bottom: 20px; /* Position captions at the bottom */
+  width: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  pointer-events: none; /* Prevent interaction with captions */
+  z-index: 10;
+}
+
+.caption-overlay p {
+  margin: 0;
+}
