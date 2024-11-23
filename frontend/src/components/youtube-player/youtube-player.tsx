@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import Plyr, { APITypes, PlyrOptions, PlyrSource } from "plyr-react";
 import "plyr-react/plyr.css";
-import Video from "../assets/trump.mp4";
-import captions from "../assets/captions.vtt";
+import Video from "../../assets/trump.mp4";
+import captions from "../../assets/captions.vtt";
 
 const VideoPlayer: React.FC = () => {
   const plyrRef = useRef<APITypes>(null);
@@ -45,7 +45,7 @@ const VideoPlayer: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+    <div className="w-full max-w-4xl mx-auto">
       <Plyr ref={plyrRef} source={videoSource} options={options} />
     </div>
   );

@@ -1,10 +1,14 @@
 import "./App.css";
-import VideoPlayer from "./components/youtube-player";
+// import HomePage from "./screens/Home";
+import Video from "./screens/Video";
+// import VideoPlayer from "./components/youtube-player";
 
 function App() {
   return (
     <>
-      <VideoPlayer />
+      {/* <HomePage /> */}
+      <Video />
+      {/* <VideoPlayer /> */}
     </>
   );
 }
