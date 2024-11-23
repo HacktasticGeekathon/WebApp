@@ -1,15 +1,18 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-// import HomePage from "./screens/Home";
+import HomePage from "./screens/Home";
 import Video from "./screens/Video";
-// import VideoPlayer from "./components/youtube-player";
+import NotFound from "./screens/NotFound";
 
 function App() {
   return (
-    <>
-      {/* <HomePage /> */}
-      <Video />
-      {/* <VideoPlayer /> */}
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/video/:id?" element={<Video />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
 

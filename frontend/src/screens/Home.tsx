@@ -1,6 +1,31 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FeatureCard from "../components/feature-card/feature-card";
 
 const HomePage = () => {
+  const [videoUrl, setVideoUrl] = useState("");
+  const navigate = useNavigate();
+
+  const handleAnalyze = (e?: React.FormEvent) => {
+    // Prevent form submission default behavior if event exists
+    e?.preventDefault();
+
+    if (!videoUrl) return;
+
+    try {
+      // Extract video ID from YouTube URL
+      const videoId = new URL(videoUrl).searchParams.get("v");
+      if (videoId) {
+        navigate(`/video/${videoId}`);
+      } else {
+        // Handle invalid YouTube URL
+        console.error("Invalid YouTube URL");
+      }
+    } catch (error) {
+      console.error("Error parsing URL:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/90 via-secondary/80 to-ternary/70">
       {/* Hero Section */}
@@ -18,16 +43,21 @@ const HomePage = () => {
 
           {/* Video Input Section */}
           <div className="max-w-xl mx-auto">
-            <div className="relative">
+            <form onSubmit={handleAnalyze} className="relative">
               <input
                 type="text"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
                 placeholder="Paste YouTube video URL here..."
                 className="w-full px-6 py-4 rounded-full text-gray-700 bg-white/90 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-lg"
               />
-              <button className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/80 transition-colors">
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/80 transition-colors"
+              >
                 Analyze
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>

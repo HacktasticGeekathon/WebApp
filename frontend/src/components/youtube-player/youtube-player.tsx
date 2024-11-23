@@ -1,7 +1,7 @@
 import React from "react";
 import Plyr, { PlyrOptions, PlyrSource } from "plyr-react";
 import "plyr-react/plyr.css";
-import Video from "../../assets/trump.mp4";
+// import Video from "../../assets/trump.mp4";
 import captions from "../../assets/captions.vtt";
 import "./youtube-player.css";
 import { VideoPlayerProps } from "../../types";
@@ -11,7 +11,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ markers, playerRef }) => {
     type: "video" as const,
     sources: [
       {
-        src: Video,
+        src: "https://d2yom3r6s9mhn3.cloudfront.net/be7b0b42-26fb-4894-8afd-e849bb9cbb5c.mp4",
         type: "video/mp4",
       },
     ],

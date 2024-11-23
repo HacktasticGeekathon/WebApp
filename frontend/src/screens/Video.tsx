@@ -66,36 +66,46 @@ const Video = () => {
         </div>
 
         {/* Analysis Section */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Fallacies Section */}
-          <div className="bg-ternary/20 backdrop-blur-md rounded-xl p-6">
-            <h2 className="text-2xl font-bold text-white mb-6">
-              Logical Fallacies
-            </h2>
-            <div className="space-y-4">
-              {fallacies.map((fallacy, index) => (
-                <TopicCard
-                  key={`fallacies-${index}`}
-                  topic={fallacy}
-                  onClick={handleTopicClick(fallacy.timestamp)}
-                />
-              ))}
+          {fallacies && fallacies.length > 0 && (
+            <div
+              className={`bg-ternary/20 backdrop-blur-md rounded-xl p-6 ${
+                !factChecks.length ? "md:col-span-2" : "md:col-span-1"
+              }`}
+            >
+              <h2 className="text-2xl font-bold text-white mb-6">
+                Logical Fallacies
+              </h2>
+              <div className="space-y-4">
+                {fallacies.map((fallacy, index) => (
+                  <TopicCard
+                    key={`fallacies-${index}`}
+                    topic={fallacy}
+                    onClick={handleTopicClick(fallacy.timestamp)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Fact Checks Section */}
-          <div className="bg-ternary/20 backdrop-blur-md rounded-xl p-6">
-            <h2 className="text-2xl font-bold text-white mb-6">Fact Checks</h2>
-            <div className="space-y-4">
-              {factChecks.map((check, index) => (
-                <TopicCard
-                  key={`factCheck-${index}`}
-                  topic={check}
-                  onClick={handleTopicClick(check.timestamp)}
-                />
-              ))}
+          {factChecks && factChecks.length > 0 && (
+            <div className="bg-ternary/20 backdrop-blur-md rounded-xl p-6 md:col-span-1">
+              <h2 className="text-2xl font-bold text-white mb-6">
+                Fact Checks
+              </h2>
+              <div className="space-y-4">
+                {factChecks.map((check, index) => (
+                  <TopicCard
+                    key={`factCheck-${index}`}
+                    topic={check}
+                    onClick={handleTopicClick(check.timestamp)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
