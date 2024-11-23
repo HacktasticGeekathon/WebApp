@@ -1,3 +1,5 @@
+import { APITypes } from "plyr-react";
+
 interface BaseTopic {
   title: string;
   description: string;
@@ -10,7 +12,7 @@ export interface Fallacy extends BaseTopic {
 
 export interface FactCheck extends BaseTopic {
   type: "factCheck";
-  verdict: "True" | "False" | "Partially True" | "Misleading";
+  verdict: string;
 }
 
 export type Topic = Fallacy | FactCheck;
@@ -27,5 +29,5 @@ export type Marker = {
 
 export interface VideoPlayerProps {
   markers: Marker[];
-  jumpTo?: number;
+  playerRef: React.RefObject<APITypes>;
 }

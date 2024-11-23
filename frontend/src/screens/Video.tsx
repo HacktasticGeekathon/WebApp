@@ -1,14 +1,17 @@
+import { useRef } from "react";
 import YoutubePlayer from "../components/youtube-player/youtube-player";
 import TopicCard from "../components/topic-card/topic-card";
 import { FactCheck, Fallacy, Marker } from "../types";
 import { capitalizeType } from "../helpers";
-import { useState } from "react";
+import { APITypes } from "plyr-react";
 
 const Video = () => {
-  const [goTo, setGoTo] = useState<number | undefined>(undefined);
+  const playerRef = useRef<APITypes>(null);
 
   const handleTopicClick = (timestamp: number) => () => {
-    setGoTo((prev) => (prev === timestamp ? undefined : timestamp));
+    if (playerRef.current) {
+      playerRef.current.plyr.currentTime = timestamp;
+    }
   };
 
   // Example data - replace with actual data from your API
@@ -41,7 +44,7 @@ const Video = () => {
     {
       type: "factCheck",
       title: "Claim about immigration statistics",
-      verdict: "False",
+      verdict: "Misleading",
       description: "Official data contradicts this statement",
       timestamp: 22,
     },
@@ -59,7 +62,7 @@ const Video = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Video Player Section */}
         <div className="mb-12">
-          <YoutubePlayer markers={markers} jumpTo={goTo} />
+          <YoutubePlayer markers={markers} playerRef={playerRef} />
         </div>
 
         {/* Analysis Section */}
