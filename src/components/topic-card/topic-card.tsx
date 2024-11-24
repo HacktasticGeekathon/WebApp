@@ -16,7 +16,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, onClick }) => {
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-lg font-semibold text-white">{topic.title}</h3>
         <span className="text-white bg-primary px-3 py-1 rounded-full text-sm">
-          {formatTimestamp(topic.timestamp)}
+          {formatTimestamp(topic.timestamp[0])}
         </span>
       </div>
       {topic.type === "factCheck" && (

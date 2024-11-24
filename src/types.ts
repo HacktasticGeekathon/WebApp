@@ -3,7 +3,8 @@ import { APITypes } from "plyr-react";
 interface BaseTopic {
   title: string;
   description: string;
-  timestamp: number;
+  timestamp: number[];
+  verdict?: string;
 }
 
 export interface Fallacy extends BaseTopic {
@@ -12,7 +13,6 @@ export interface Fallacy extends BaseTopic {
 
 export interface FactCheck extends BaseTopic {
   type: "factCheck";
-  verdict: string;
 }
 
 export type Topic = Fallacy | FactCheck;
@@ -31,6 +31,7 @@ export interface VideoPlayerProps {
   videoData: VideoData;
   markers: Marker[];
   playerRef: React.RefObject<APITypes>;
+  vtt?: string;
 }
 
 export type VideoData = {

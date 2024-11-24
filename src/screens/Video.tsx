@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import YoutubePlayer from "../components/youtube-player/youtube-player";
 import TopicCard from "../components/topic-card/topic-card";
-import { FactCheck, Fallacy, Marker, VideoData } from "../types";
+import { Caption, FactCheck, Fallacy, Marker, VideoData } from "../types";
 import { capitalizeType } from "../helpers";
 import { APITypes } from "plyr-react";
 import PageLoader from "../components/page-loader/page-loader";
@@ -17,6 +17,9 @@ const Video = () => {
   const [videoData, setVideoData] = useState<VideoData>(initialVideoDataState);
   const [statusMessages, setStatusMessages] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [vtt, setVtt] = useState<string>("");
+  const [factChecks, setFactChecks] = useState<FactCheck[]>([]);
+  const [fallacies, setFallacies] = useState<Fallacy[]>([]);
 
   // Get the URL from query params
   const videoUrl = searchParams.get("url");
@@ -49,19 +52,88 @@ const Video = () => {
           return updatedMessages;
         });
 
-        if (data.facts) {
-          const vttContent = formatFactsToVTT(data.facts);
-          const blob = new Blob([vttContent], { type: "text/vtt" });
-          const url = URL.createObjectURL(blob);
+        const facts = [
+          {
+            description:
+              "Misrepresenting opponent's argument to make it easier to attack",
+            timestamp: [0, 27],
+            title: "Straw Man",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Presenting only two options when there are other possibilities",
+            timestamp: [27, 55],
+            title: "False Dilemma",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Attack on the opponent's character rather than their argument",
+            timestamp: [55, 81],
+            title: "Ad Hominem",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Misrepresenting opponent's argument to make it easier to attack",
+            timestamp: [81, 89],
+            title: "Straw Man",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Presenting only two options when there are other possibilities",
+            timestamp: [90, 106],
+            title: "False Dilemma",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Attack on the opponent's character rather than their argument",
+            timestamp: [106, 122],
+            title: "Ad Hominem",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Misrepresenting opponent's argument to make it easier to attack",
+            timestamp: [122, 131],
+            title: "Straw Man",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Presenting only two options when there are other possibilities",
+            timestamp: [132, 148],
+            title: "False Dilemma",
+            type: "fallacy",
+            verdict: "",
+          },
+          {
+            description:
+              "Attack on the opponent's character rather than their argument",
+            timestamp: [148, 177],
+            title: "Ad Hominem",
+            type: "fallacy",
+            verdict: "",
+          },
+        ] as Fallacy[];
 
-          // Create a link element
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "captions.vtt"; // Name of the file
-          document.body.appendChild(a);
-          a.click(); // Programmatically click the link to trigger the download
-          document.body.removeChild(a); // Clean up
-          URL.revokeObjectURL(url); // Free up memory
+        console.log("facts", facts);
+
+        if (facts) {
+          console.log("Inside data.facts");
+          const vttContent = formatFactsToVTT(facts);
+          setVtt(vttContent);
+          setFallacies(facts);
         }
 
         if (data.status === "Fetching facts analysis...") setLoading(false);
@@ -103,45 +175,45 @@ const Video = () => {
   };
 
   // Example data - replace with actual data from your API
-  const fallacies: Fallacy[] = [
-    {
-      type: "fallacy",
-      title: "Ad Hominem",
-      description:
-        "Attack on the opponent's character rather than their argument",
-      timestamp: 2,
-    },
-    {
-      type: "fallacy",
-      title: "Straw Man",
-      description:
-        "Misrepresenting opponent's argument to make it easier to attack",
-      timestamp: 10,
-    },
-  ];
+  // const fallacies: Fallacy[] = [
+  //   {
+  //     type: "fallacy",
+  //     title: "Ad Hominem",
+  //     description:
+  //       "Attack on the opponent's character rather than their argument",
+  //     timestamp: [2, 3],
+  //   },
+  //   {
+  //     type: "fallacy",
+  //     title: "Straw Man",
+  //     description:
+  //       "Misrepresenting opponent's argument to make it easier to attack",
+  //     timestamp: [10, 12],
+  //   },
+  // ];
 
-  const factChecks: FactCheck[] = [
-    {
-      type: "factCheck",
-      title: "Statement about economic growth",
-      verdict: "Partially True",
-      description:
-        "While the numbers are accurate, important context is missing",
-      timestamp: 30,
-    },
-    {
-      type: "factCheck",
-      title: "Claim about immigration statistics",
-      verdict: "Misleading",
-      description: "Official data contradicts this statement",
-      timestamp: 22,
-    },
-  ];
+  // const factChecks: FactCheck[] = [
+  //   {
+  //     type: "factCheck",
+  //     title: "Statement about economic growth",
+  //     verdict: "Partially True",
+  //     description:
+  //       "While the numbers are accurate, important context is missing",
+  //     timestamp: [30, 35],
+  //   },
+  //   {
+  //     type: "factCheck",
+  //     title: "Claim about immigration statistics",
+  //     verdict: "Misleading",
+  //     description: "Official data contradicts this statement",
+  //     timestamp: [22, 25],
+  //   },
+  // ];
 
   const markers: Marker[] = [...factChecks, ...fallacies].map((m) => {
     return {
       label: `${capitalizeType(m.type)} - ${m.title}`,
-      time: m.timestamp,
+      time: m.timestamp[0],
     };
   });
 
@@ -169,6 +241,8 @@ const Video = () => {
           {/* You can use an icon library or a custom icon */}
           <span className="ml-2">Back</span>
         </button>
+        <h1 className="text-5xl font-bold">Veritas</h1>
+        <span className="min-w-16"></span>
       </div>
 
       <div className="container mx-auto px-4 py-8">
@@ -179,6 +253,7 @@ const Video = () => {
               videoData={videoData}
               markers={markers}
               playerRef={playerRef}
+              vtt={vtt}
             />
           </div>
         </div>
@@ -200,7 +275,7 @@ const Video = () => {
                   <TopicCard
                     key={`fallacies-${index}`}
                     topic={fallacy}
-                    onClick={handleTopicClick(fallacy.timestamp)}
+                    onClick={handleTopicClick(fallacy.timestamp[0])}
                   />
                 ))}
               </div>
@@ -218,7 +293,7 @@ const Video = () => {
                   <TopicCard
                     key={`factCheck-${index}`}
                     topic={check}
-                    onClick={handleTopicClick(check.timestamp)}
+                    onClick={handleTopicClick(check.timestamp[0])}
                   />
                 ))}
               </div>
@@ -231,20 +306,21 @@ const Video = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const formatFactsToVTT = (facts: any[]) => {
+const formatFactsToVTT = (facts: Caption[]) => {
+  console.log("format", facts);
   let vttContent = "WEBVTT\n\n"; // Start of the VTT file
 
   facts.forEach((fact, index) => {
     // Assuming each fact has a start time, end time, and text
-    const startTime = fact.startTime; // Replace with actual start time
-    const endTime = fact.endTime; // Replace with actual end time
-    const text = fact.text; // Replace with actual text
+    const startTime = fact.timestamp[0]; // Replace with actual start time
+    const endTime = fact.timestamp[1]; // Replace with actual end time
+    const text = fact.title; // Replace with actual text
 
     vttContent += `${index + 1}\n`; // Cue number
     vttContent += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`; // Cue timing
-    vttContent += `${text}\n\n`; // Cue text
+    vttContent += `${capitalizeType(fact.type)} - ${text}\n\n`; // Cue text
   });
-
+  console.log("content", vttContent);
   return vttContent;
 };
 

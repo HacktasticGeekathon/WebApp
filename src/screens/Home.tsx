@@ -48,7 +48,7 @@ const HomePage = () => {
     {
       title: "Hillary Clinton Concession Speech",
       description:
-        "She spoke of the pain of defeat and hopes for the success of Donald Trump’s presidency.",
+        "She spoke of the pain of defeat and hopes for the success of Donald Trump's presidency.",
       thumbnail: "https://img.youtube.com/vi/-yHgE9W699w/maxresdefault.jpg",
       videoUrl: "https://www.youtube.com/watch?v=-yHgE9W699w",
     },
@@ -56,6 +56,13 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/90 via-secondary/80 to-ternary/70">
+      {/* Header Section */}
+      <header className="py-4 shadow">
+        <div className="container mx-auto text-center">
+          <h1 className="text-5xl font-bold text-white">Veritas</h1>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <div className="container mx-auto px-4 pt-20 pb-32">
         <div className="text-center">
