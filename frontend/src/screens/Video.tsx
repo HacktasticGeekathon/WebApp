@@ -49,6 +49,21 @@ const Video = () => {
           return updatedMessages;
         });
 
+        if (data.facts) {
+          const vttContent = formatFactsToVTT(data.facts);
+          const blob = new Blob([vttContent], { type: "text/vtt" });
+          const url = URL.createObjectURL(blob);
+
+          // Create a link element
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "captions.vtt"; // Name of the file
+          document.body.appendChild(a);
+          a.click(); // Programmatically click the link to trigger the download
+          document.body.removeChild(a); // Clean up
+          URL.revokeObjectURL(url); // Free up memory
+        }
+
         if (data.status === "Fetching facts analysis...") setLoading(false);
       } catch (error) {
         console.error("Error parsing WebSocket message:", error);
@@ -144,14 +159,28 @@ const Video = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/90 via-secondary/80 to-ternary/70">
+      {/* Header with Back Button */}
+      <div className="flex items-center justify-between p-4 bg-transparent text-white">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center p-2 bg-blue-500 rounded hover:bg-blue-600 blur-none"
+        >
+          <span className="material-icons">⬅</span>{" "}
+          {/* You can use an icon library or a custom icon */}
+          <span className="ml-2">Back</span>
+        </button>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         {/* Video Player Section */}
-        <div className="mb-12">
-          <YoutubePlayer
-            videoData={videoData}
-            markers={markers}
-            playerRef={playerRef}
-          />
+        <div className="mb-12 flex justify-center">
+          <div className="max-w-full max-h-[80vh] overflow-hidden">
+            <YoutubePlayer
+              videoData={videoData}
+              markers={markers}
+              playerRef={playerRef}
+            />
+          </div>
         </div>
 
         {/* Analysis Section */}
@@ -199,6 +228,34 @@ const Video = () => {
       </div>
     </div>
   );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formatFactsToVTT = (facts: any[]) => {
+  let vttContent = "WEBVTT\n\n"; // Start of the VTT file
+
+  facts.forEach((fact, index) => {
+    // Assuming each fact has a start time, end time, and text
+    const startTime = fact.startTime; // Replace with actual start time
+    const endTime = fact.endTime; // Replace with actual end time
+    const text = fact.text; // Replace with actual text
+
+    vttContent += `${index + 1}\n`; // Cue number
+    vttContent += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`; // Cue timing
+    vttContent += `${text}\n\n`; // Cue text
+  });
+
+  return vttContent;
+};
+
+// Helper function to format time in VTT format (HH:MM:SS.mmm)
+const formatTime = (time: number) => {
+  const date = new Date(time * 1000); // Convert seconds to milliseconds
+  return `${String(date.getUTCHours()).padStart(2, "0")}:${String(
+    date.getUTCMinutes()
+  ).padStart(2, "0")}:${String(date.getUTCSeconds()).padStart(2, "0")}.${String(
+    date.getUTCMilliseconds()
+  ).padStart(3, "0")}`;
 };
 
 export default Video;

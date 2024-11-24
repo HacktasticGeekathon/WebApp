@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FeatureCard from "../components/feature-card/feature-card";
+import ExampleCard from "../components/example-card/example-card";
 
 const HomePage = () => {
   const [videoUrl, setVideoUrl] = useState("");
@@ -28,6 +29,30 @@ const HomePage = () => {
       console.error("Error parsing URL:", error);
     }
   };
+
+  // Hardcoded example data
+  const examples = [
+    {
+      title: "Trump about Nord Stream 2",
+      description: 'Trump reveals to Tucker who "killed" the Nord Stream 2.',
+      thumbnail: "https://img.youtube.com/vi/zpKwjIhDkPM/maxresdefault.jpg",
+      videoUrl: "https://www.youtube.com/watch?v=zpKwjIhDkPM",
+    },
+    {
+      title: "Trump false claim on immigrants",
+      description:
+        "Trump repeats false claims of immigrants eating pets during debate with Harris.",
+      thumbnail: "https://img.youtube.com/vi/K16HAiBALMc/maxresdefault.jpg",
+      videoUrl: "https://www.youtube.com/watch?v=K16HAiBALMc",
+    },
+    {
+      title: "Hillary Clinton Concession Speech",
+      description:
+        "She spoke of the pain of defeat and hopes for the success of Donald Trump’s presidency.",
+      thumbnail: "https://img.youtube.com/vi/-yHgE9W699w/maxresdefault.jpg",
+      videoUrl: "https://www.youtube.com/watch?v=-yHgE9W699w",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/90 via-secondary/80 to-ternary/70">
@@ -65,9 +90,30 @@ const HomePage = () => {
         </div>
       </div>
 
+      {/* Examples Section */}
+      <div className="bg-white py-20">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-primary/90 via-secondary/80 to-ternary/90 text-center mb-8">
+            Examples
+          </h1>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {examples.map((example, index) => (
+              <ExampleCard
+                key={index}
+                title={example.title}
+                description={example.description}
+                thumbnail={example.thumbnail}
+                videoUrl={example.videoUrl}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Features Section */}
       <div className="bg-white/10 backdrop-blur-md py-20">
         <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold text-center mb-8">Features</h1>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <FeatureCard
               title="Fallacy Detection"

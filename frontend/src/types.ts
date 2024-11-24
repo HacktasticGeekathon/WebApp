@@ -37,3 +37,5 @@ export type VideoData = {
   video: string;
   thumbnail: string;
 };
+
+export type Caption = FactCheck | Fallacy;
