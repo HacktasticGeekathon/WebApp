@@ -6,12 +6,16 @@ import captions from "../../assets/captions.vtt";
 import "./youtube-player.css";
 import { VideoPlayerProps } from "../../types";
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ markers, playerRef }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  videoData,
+  markers,
+  playerRef,
+}) => {
   const videoSource: PlyrSource = {
     type: "video" as const,
     sources: [
       {
-        src: "https://d2yom3r6s9mhn3.cloudfront.net/be7b0b42-26fb-4894-8afd-e849bb9cbb5c.mp4",
+        src: videoData.video,
         type: "video/mp4",
       },
     ],

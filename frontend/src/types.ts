@@ -28,6 +28,12 @@ export type Marker = {
 };
 
 export interface VideoPlayerProps {
+  videoData: VideoData;
   markers: Marker[];
   playerRef: React.RefObject<APITypes>;
 }
+
+export type VideoData = {
+  video: string;
+  thumbnail: string;
+};

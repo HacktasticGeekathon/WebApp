@@ -7,19 +7,22 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const handleAnalyze = (e?: React.FormEvent) => {
-    // Prevent form submission default behavior if event exists
     e?.preventDefault();
 
     if (!videoUrl) return;
 
     try {
-      // Extract video ID from YouTube URL
-      const videoId = new URL(videoUrl).searchParams.get("v");
-      if (videoId) {
-        navigate(`/video/${videoId}`);
+      // Basic validation for YouTube URL
+      const url = new URL(videoUrl);
+      if (
+        url.hostname.includes("youtube.com") ||
+        url.hostname.includes("youtu.be")
+      ) {
+        // Encode the URL to handle special characters
+        const encodedUrl = encodeURIComponent(videoUrl);
+        navigate(`/video?url=${encodedUrl}`);
       } else {
-        // Handle invalid YouTube URL
-        console.error("Invalid YouTube URL");
+        console.error("Not a YouTube URL");
       }
     } catch (error) {
       console.error("Error parsing URL:", error);

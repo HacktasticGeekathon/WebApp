@@ -1,12 +1,85 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import YoutubePlayer from "../components/youtube-player/youtube-player";
 import TopicCard from "../components/topic-card/topic-card";
-import { FactCheck, Fallacy, Marker } from "../types";
+import { FactCheck, Fallacy, Marker, VideoData } from "../types";
 import { capitalizeType } from "../helpers";
 import { APITypes } from "plyr-react";
+import PageLoader from "../components/page-loader/page-loader";
+
+const initialVideoDataState: VideoData = { video: "", thumbnail: "" };
 
 const Video = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const playerRef = useRef<APITypes>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const [videoData, setVideoData] = useState<VideoData>(initialVideoDataState);
+  const [statusMessages, setStatusMessages] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Get the URL from query params
+  const videoUrl = searchParams.get("url");
+
+  useEffect(() => {
+    if (!videoUrl || wsRef.current) return;
+
+    // Decode the URL
+    const decodedUrl = decodeURIComponent(videoUrl);
+
+    // Create WebSocket connection
+    wsRef.current = new WebSocket("ws://127.0.0.1:8000/process");
+    // Connection opened
+    wsRef.current.onopen = () => {
+      console.log("Connected to WebSocket");
+      // Send the video URL to the server when connection is established
+      wsRef.current?.send(decodedUrl);
+      console.log("SEND REQUEST");
+    };
+
+    // Listen for messages
+    wsRef.current.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.video || data.thumbnail) return setVideoData(data);
+
+        // Update status messages
+        setStatusMessages((prevMessages) => {
+          const updatedMessages = [data.status, ...prevMessages];
+          return updatedMessages;
+        });
+
+        if (data.status === "Fetching facts analysis...") setLoading(false);
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    // Handle errors
+    wsRef.current.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    // Handle connection close
+    wsRef.current.onclose = () => {
+      console.log("Disconnected from WebSocket");
+      wsRef.current = null; // Clear the ref when connection closes
+    };
+
+    // Cleanup on component unmount
+    return () => {
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+    };
+  }, [videoUrl]);
+
+  // Redirect to home if no URL is provided
+  if (!videoUrl) {
+    navigate("/");
+    return null;
+  }
 
   const handleTopicClick = (timestamp: number) => () => {
     if (playerRef.current) {
@@ -57,12 +130,28 @@ const Video = () => {
     };
   });
 
+  if (loading) {
+    // Pass the most recent status message as the message prop
+    const currentMessage = statusMessages[0] || "Loading...";
+    return (
+      <PageLoader
+        message={currentMessage} // Use the latest status message
+        thumbnail={videoData.thumbnail}
+        statusMessages={statusMessages}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/90 via-secondary/80 to-ternary/70">
       <div className="container mx-auto px-4 py-8">
         {/* Video Player Section */}
         <div className="mb-12">
-          <YoutubePlayer markers={markers} playerRef={playerRef} />
+          <YoutubePlayer
+            videoData={videoData}
+            markers={markers}
+            playerRef={playerRef}
+          />
         </div>
 
         {/* Analysis Section */}
