@@ -31,7 +31,8 @@ const Video = () => {
     const decodedUrl = decodeURIComponent(videoUrl);
 
     // Create WebSocket connection
-    wsRef.current = new WebSocket("ws://127.0.0.1:8000/process");
+    wsRef.current = new WebSocket(import.meta.env.VITE_API_URL);
+
     // Connection opened
     wsRef.current.onopen = () => {
       console.log("Connected to WebSocket");
@@ -52,91 +53,20 @@ const Video = () => {
           return updatedMessages;
         });
 
-        const facts = [
-          {
-            description:
-              "Misrepresenting opponent's argument to make it easier to attack",
-            timestamp: [0, 27],
-            title: "Straw Man",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Presenting only two options when there are other possibilities",
-            timestamp: [27, 55],
-            title: "False Dilemma",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Attack on the opponent's character rather than their argument",
-            timestamp: [55, 81],
-            title: "Ad Hominem",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Misrepresenting opponent's argument to make it easier to attack",
-            timestamp: [81, 89],
-            title: "Straw Man",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Presenting only two options when there are other possibilities",
-            timestamp: [90, 106],
-            title: "False Dilemma",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Attack on the opponent's character rather than their argument",
-            timestamp: [106, 122],
-            title: "Ad Hominem",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Misrepresenting opponent's argument to make it easier to attack",
-            timestamp: [122, 131],
-            title: "Straw Man",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Presenting only two options when there are other possibilities",
-            timestamp: [132, 148],
-            title: "False Dilemma",
-            type: "fallacy",
-            verdict: "",
-          },
-          {
-            description:
-              "Attack on the opponent's character rather than their argument",
-            timestamp: [148, 177],
-            title: "Ad Hominem",
-            type: "fallacy",
-            verdict: "",
-          },
-        ] as Fallacy[];
-
-        console.log("facts", facts);
-
-        if (facts) {
+        if (data.facts) {
           console.log("Inside data.facts");
-          const vttContent = formatFactsToVTT(facts);
+          const vttContent = formatFactsToVTT(data.facts);
           setVtt(vttContent);
-          setFallacies(facts);
+          setFactChecks(data.facts);
+        }
+        if (data.fallacies) {
+          console.log("Inside data.fallacies");
+          const vttContent = formatFactsToVTT(data.fallacies);
+          setVtt(vttContent);
+          setFallacies(data.fallacies);
         }
 
-        if (data.status === "Fetching facts analysis...") setLoading(false);
+        if (data.facts || data.fallacies) setLoading(false);
       } catch (error) {
         console.error("Error parsing WebSocket message:", error);
       }
