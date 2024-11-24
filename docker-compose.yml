@@ -1,0 +1,7 @@
+services:
+  webapp:
+    image: jcoelho584/fallacy-webapp
+    build:
+      context: .
+    ports:
+      - 3000:3000
